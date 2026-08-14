@@ -64,4 +64,3 @@ DevOps Roadmap
 
 # Jenkins CI/CD
 # Jenkins CI/CD Devops
-# Jenkins CI/CD Devops Cloud
