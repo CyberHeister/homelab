@@ -36,3 +36,7 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.swp
+
+# Tailscale certificates
+*.crt
+*.key

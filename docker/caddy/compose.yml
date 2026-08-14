@@ -1,0 +1,24 @@
+services:
+  caddy:
+    image: caddy:2
+    container_name: caddy
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:8088:80"
+
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+    networks:
+      - homelab-proxy
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  homelab-proxy:
+    external: true
