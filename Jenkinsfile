@@ -9,15 +9,6 @@ pipeline {
             }
         }
 
-        stage('Show Commit') {
-            steps {
-                sh '''
-                    echo "Commit:"
-                    git log -1 --oneline
-                '''
-            }
-        }
-
         stage('Validate Compose') {
             steps {
                 sh '''
@@ -27,11 +18,21 @@ pipeline {
                         if [ -f "$dir/compose.yml" ]; then
                             echo "Validating $dir"
                             docker compose -f "$dir/compose.yml" config -q
+
                         elif [ -f "$dir/compose.yaml" ]; then
                             echo "Validating $dir"
                             docker compose -f "$dir/compose.yaml" config -q
                         fi
                     done
+                '''
+            }
+        }
+
+        stage('Detect Changes') {
+            steps {
+                sh '''
+                    echo "Changed files:"
+                    git diff --name-only HEAD~1 HEAD || true
                 '''
             }
         }
