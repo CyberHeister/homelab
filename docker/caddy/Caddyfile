@@ -9,7 +9,6 @@
     }
 
     handle /uptime/* {
-        uri strip_prefix /uptime
         reverse_proxy uptime-kuma:3001
     }
 
@@ -26,6 +25,10 @@
     }
     handle /admin/* {
     	reverse_proxy pihole:80
+    }
+    handle /jellyfin/* {
+    	uri strip_prefix /jellyfin
+    	reverse_proxy jellyfin:8096
     }
     handle {
         respond "Homelab reverse proxy is running"

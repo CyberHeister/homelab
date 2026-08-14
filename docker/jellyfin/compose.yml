@@ -17,3 +17,10 @@ services:
 
     devices:
       - /dev/dri:/dev/dri
+
+    networks:
+      - homelab-proxy
+
+networks:
+  homelab-proxy:
+    external: true
