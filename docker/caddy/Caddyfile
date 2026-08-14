@@ -20,16 +20,34 @@
             }
         }
     }
+
     handle /pihole* {
     	redir /admin/ permanent
     }
+
     handle /admin/* {
-    	reverse_proxy pihole:80
+    	reverse_proxy pihole:80 {
+        	header_up Host {host}
+        	header_up X-Real-IP {remote_host}
+        	header_up X-Forwarded-For {remote_host}
+        	header_up X-Forwarded-Proto {scheme}
+    	}
     }
+
     handle /jellyfin/* {
     	uri strip_prefix /jellyfin
     	reverse_proxy jellyfin:8096
     }
+
+    handle /api/* {
+    	reverse_proxy pihole:80 {
+        	header_up Host {host}
+        	header_up X-Real-IP {remote_host}
+        	header_up X-Forwarded-For {remote_host}
+        	header_up X-Forwarded-Proto {scheme}
+    	}
+    }
+    
     handle {
         respond "Homelab reverse proxy is running"
     }
