@@ -16,4 +16,10 @@ services:
     volumes:
       - './etc-pihole:/etc/pihole'
       - './etc-dnsmasq.d:/etc/dnsmasq.d'
+    networks:
+      - homelab-proxy
     restart: unless-stopped
+
+networks:
+  homelab-proxy:
+    external: true

@@ -9,3 +9,10 @@ services:
 
     volumes:
       - /opt/homelab/data/uptime-kuma:/app/data
+
+    networks:
+      - homelab-proxy
+
+networks:
+  homelab-proxy:
+    external: true

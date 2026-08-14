@@ -9,6 +9,10 @@ services:
       - USER_GID=1000
       - TZ=Asia/Kolkata
       - GITEA__SECURITY__ALLOWED_HOST_LIST=jenkins,172.24.0.2
+      - GITEA__server__ROOT_URL=https://malyashome.tail8ec23d.ts.net/gitea/
+      - GITEA__server__DOMAIN=malyashome.tail8ec23d.ts.net
+      - GITEA__server__SSH_DOMAIN=192.168.1.8
+      - GITEA__server__HTTP_PORT=3000
 
     ports:
       - "3000:3000"
