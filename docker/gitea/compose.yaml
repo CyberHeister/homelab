@@ -8,6 +8,7 @@ services:
       - USER_UID=1000
       - USER_GID=1000
       - TZ=Asia/Kolkata
+      - GITEA__SECURITY__ALLOWED_HOST_LIST=jenkins,172.24.0.2
 
     ports:
       - "3000:3000"
@@ -18,7 +19,9 @@ services:
 
     networks:
       - homelab
+      - homelab-proxy
 
 networks:
   homelab:
+  homelab-proxy:
     external: true
