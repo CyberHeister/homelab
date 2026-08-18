@@ -1,0 +1,86 @@
+services:
+
+  outline:
+    image: docker.getoutline.com/outlinewiki/outline:latest
+    container_name: outline
+    restart: unless-stopped
+
+    environment:
+      NODE_ENV: production
+
+      URL: https://outline.home.arpa
+
+      SECRET_KEY: c0b39b2d34c0821cdd58635ebb937cca87ada4616e19099a6562211694a6b5e4
+      UTILS_SECRET: bd38d65908e5970e19ea73e3113691fbe86ec24f62b0252f230f86d992282d45
+
+      DATABASE_URL: postgres://outline:3ce04bbf9f6af519c3583766c02808b6772f71199ab0a0ee@outline-db:5432/outline
+      PGSSLMODE: disable
+
+      REDIS_URL: redis://outline-redis:6379
+
+      FILE_STORAGE: local
+      FILE_STORAGE_LOCAL_ROOT_DIR: /var/lib/outline/data
+
+      FORCE_HTTPS: "true"
+
+    volumes:
+      - /home/malya/homelab/homelab/data/outline:/var/lib/outline/data
+
+    depends_on:
+      outline-db:
+        condition: service_healthy
+      outline-redis:
+        condition: service_healthy
+
+    networks:
+      - homelab-proxy
+
+  outline-db:
+    image: postgres:16
+    container_name: outline-db
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: outline
+      POSTGRES_USER: outline
+      POSTGRES_PASSWORD: 3ce04bbf9f6af519c3583766c02808b6772f71199ab0a0ee
+
+    volumes:
+      - /home/malya/homelab/homelab/data/outline-postgres:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U outline -d outline
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+    networks:
+      - homelab-proxy
+
+  outline-redis:
+    image: redis:7-alpine
+    container_name: outline-redis
+    restart: unless-stopped
+
+    command: redis-server --appendonly yes
+
+    volumes:
+      - /home/malya/homelab/homelab/data/outline-redis:/data
+
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+    networks:
+      - homelab-proxy
+
+networks:
+  homelab-proxy:
+    external: true

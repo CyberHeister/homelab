@@ -1,0 +1,48 @@
+services:
+  wikijs:
+    image: ghcr.io/requarks/wiki:2
+    container_name: wikijs
+    restart: unless-stopped
+
+    environment:
+      DB_TYPE: postgres
+      DB_HOST: wikijs-db
+      DB_PORT: 5432
+      DB_USER: wikijs
+      DB_PASS: nigamalya16
+      DB_NAME: wikijs
+
+    depends_on:
+      wikijs-db:
+        condition: service_healthy
+
+    networks:
+      - homelab-proxy
+
+  wikijs-db:
+    image: postgres:16
+    container_name: wikijs-db
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: wikijs
+      POSTGRES_PASSWORD: nigamalya16
+      POSTGRES_DB: wikijs
+
+    volumes:
+      - /home/malya/homelab/homelab/data/wikijs-db:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U wikijs -d wikijs
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+    networks:
+      - homelab-proxy
+
+networks:
+  homelab-proxy:
+    external: true

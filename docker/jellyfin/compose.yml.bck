@@ -1,0 +1,19 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+
+    ports:
+      - "8096:8096"
+
+    environment:
+      - TZ=Asia/Kolkata
+
+    volumes:
+      - /opt/homelab/data/jellyfin/config:/config
+      - /opt/homelab/data/jellyfin/cache:/cache
+      - /opt/homelab/data/media:/media
+
+    devices:
+      - /dev/dri:/dev/dri

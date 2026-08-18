@@ -1,0 +1,15 @@
+services:
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+
+    volumes:
+      - /home/malya/homelab/homelab/data/grafana:/var/lib/grafana
+
+    networks:
+      - homelab-proxy
+
+networks:
+  homelab-proxy:
+    external: true

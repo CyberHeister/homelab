@@ -1,0 +1,18 @@
+services:
+
+  beszel:
+    image: henrygd/beszel:latest
+    container_name: beszel
+    restart: unless-stopped
+    environment:
+      APP_URL: https://beszel.home.arpa
+
+    volumes:
+      - /home/malya/homelab/homelab/data/beszel:/beszel_data
+
+    networks:
+      - homelab-proxy
+
+networks:
+  homelab-proxy:
+    external: true

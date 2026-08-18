@@ -6,6 +6,10 @@ services:
 
     ports:
       - "127.0.0.1:8088:80"
+      - "192.168.1.8:443:443"
+#      - "80:80"
+ #     - "443:443"
+  #    - "443:443/udp"
 
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro

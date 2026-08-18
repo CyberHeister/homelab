@@ -1,0 +1,15 @@
+services:
+  actual:
+    image: actualbudget/actual-server:latest
+    container_name: actual
+    restart: unless-stopped
+
+    volumes:
+      - /home/malya/homelab/homelab/data/actual:/data
+
+    networks:
+      - homelab-proxy
+
+networks:
+  homelab-proxy:
+    external: true

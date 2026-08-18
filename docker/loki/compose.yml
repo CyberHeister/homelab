@@ -1,0 +1,43 @@
+services:
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    restart: unless-stopped
+
+    command:
+      - -config.file=/etc/loki/local-config.yaml
+
+    volumes:
+      - /home/malya/homelab/homelab/data/loki:/loki
+      - /home/malya/homelab/homelab/docker/loki/local-config.yaml:/etc/loki/local-config.yaml:ro
+
+    networks:
+      - homelab-proxy
+
+  alloy:
+    image: grafana/alloy:latest
+    container_name: alloy
+    restart: unless-stopped
+
+    command:
+      - run
+      - /etc/alloy/config.alloy
+      - --storage.path=/var/lib/alloy/data
+
+    volumes:
+      - /home/malya/homelab/homelab/docker/loki/config.alloy:/etc/alloy/config.alloy:ro
+      - /home/malya/homelab/homelab/data/alloy:/var/lib/alloy/data
+
+      # Docker container logs
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+
+      # Docker socket for container metadata
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+    networks:
+      - homelab-proxy
+
+networks:
+  homelab-proxy:
+    external: true

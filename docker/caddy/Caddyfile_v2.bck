@@ -1,0 +1,74 @@
+:80 {
+    handle /jenkins/* {
+        reverse_proxy jenkins:8080
+    }
+
+    handle /gitea/* {
+        uri strip_prefix /gitea
+        reverse_proxy gitea:3000
+    }
+
+    handle /uptime/* {
+        reverse_proxy uptime-kuma:3001
+    }
+
+    handle /portainer/* {
+        uri strip_prefix /portainer
+        reverse_proxy https://portainer:9443 {
+            transport http {
+                tls_insecure_skip_verify
+            }
+        }
+    }
+
+    handle /pihole* {
+    	redir /admin/ permanent
+    }
+
+    handle /admin/* {
+    	reverse_proxy pihole:80 {
+        	header_up Host {host}
+        	header_up X-Real-IP {remote_host}
+        	header_up X-Forwarded-For {remote_host}
+        	header_up X-Forwarded-Proto {scheme}
+    	}
+    }
+
+    handle /jellyfin/* {
+    	uri strip_prefix /jellyfin
+    	reverse_proxy jellyfin:8096
+    }
+
+    handle /api/* {
+    	reverse_proxy pihole:80 {
+        	header_up Host {host}
+        	header_up X-Real-IP {remote_host}
+        	header_up X-Forwarded-For {remote_host}
+        	header_up X-Forwarded-Proto {scheme}
+    	}
+    }
+    # -------------------------
+    # Memos
+    # -------------------------
+    handle /memos/* {
+        reverse_proxy memos:5230
+    }
+    handle /assets/* {
+	reverse_proxy memos:5230
+    }
+    handle /api/* {
+	reverse_proxy memos:5230
+    }
+    handle /auth* {
+   	reverse_proxy memos:5230
+    }    
+    handle {
+        respond "Homelab reverse proxy is running"
+    }
+}
+
+memos.home.arpa {
+    tls internal
+
+    reverse_proxy memos:5230
+}

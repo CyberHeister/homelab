@@ -1,0 +1,19 @@
+:80 {
+    handle /jenkins/* {
+        reverse_proxy jenkins:8080
+    }
+    
+    handle /gitea/* {
+        uri strip_prefix /gitea
+        reverse_proxy gitea:3000
+    }
+    
+    handle /uptime/* {
+    	uri strip_prefix /uptime
+    	reverse_proxy uptime-kuma:3001
+    }
+
+    handle {
+        respond "Homelab reverse proxy is running"
+    }
+}

@@ -1,0 +1,24 @@
+services:
+  memos:
+    image: neosmemo/memos:stable
+    container_name: memos
+    restart: unless-stopped
+
+    ports:
+      - "5230:5230"
+
+    environment:
+      MEMOS_PORT: 5230
+      MEMOS_DRIVER: sqlite
+#      MEMOS_INSTANCE_URL: https://malyashome.tail8ec23d.ts.net/memos
+      MEMOS_INSTANCE_URL: https://memos.home.arpa
+
+    volumes:
+      - /home/malya/homelab/homelab/data/memos:/var/opt/memos
+
+    networks:
+      - homelab-proxy
+
+networks:
+  homelab-proxy:
+    external: true

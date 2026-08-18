@@ -22,33 +22,80 @@
     }
 
     handle /pihole* {
-    	redir /admin/ permanent
+        redir /admin/ permanent
     }
 
     handle /admin/* {
-    	reverse_proxy pihole:80 {
-        	header_up Host {host}
-        	header_up X-Real-IP {remote_host}
-        	header_up X-Forwarded-For {remote_host}
-        	header_up X-Forwarded-Proto {scheme}
-    	}
+        reverse_proxy pihole:80
     }
 
     handle /jellyfin/* {
-    	uri strip_prefix /jellyfin
-    	reverse_proxy jellyfin:8096
+        uri strip_prefix /jellyfin
+        reverse_proxy jellyfin:8096
     }
 
     handle /api/* {
-    	reverse_proxy pihole:80 {
-        	header_up Host {host}
-        	header_up X-Real-IP {remote_host}
-        	header_up X-Forwarded-For {remote_host}
-        	header_up X-Forwarded-Proto {scheme}
-    	}
+        reverse_proxy pihole:80
     }
-    
+
+    # Memos paths used by the old shared hostname
+    handle /memos/* {
+        reverse_proxy memos:5230
+    }
+
+    handle /assets/* {
+        reverse_proxy memos:5230
+    }
+
+    handle /auth* {
+        reverse_proxy memos:5230
+    }
+
     handle {
         respond "Homelab reverse proxy is running"
+    }
+}
+
+memos.home.arpa {
+    tls internal
+
+    reverse_proxy memos:5230
+}
+linkding.home.arpa {
+    tls internal
+
+    reverse_proxy linkding:9090
+}
+actual.home.arpa {
+    tls internal
+
+    reverse_proxy actual:5006
+}
+bookstack.home.arpa {
+	tls internal
+	reverse_proxy bookstack:80
+}
+wiki.home.arpa {
+    reverse_proxy wikijs:3000
+}
+prometheus.home.arpa {
+    tls internal
+    reverse_proxy prometheus:9090
+}
+grafana.home.arpa {
+    	tls internal
+	reverse_proxy grafana:3000
+}
+outline.home.arpa {
+    tls internal
+    reverse_proxy outline:3000
+}
+beszel.home.arpa {
+    tls internal
+
+    reverse_proxy beszel:8090 {
+        transport http {
+            read_timeout 360s
+        }
     }
 }
